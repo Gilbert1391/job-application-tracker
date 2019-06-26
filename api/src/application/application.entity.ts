@@ -4,9 +4,11 @@ import {
   PrimaryGeneratedColumn,
   BaseEntity,
   CreateDateColumn,
+  Unique,
 } from 'typeorm';
 
 @Entity()
+@Unique(['job_post_url'])
 export class Application extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;

@@ -1,7 +1,11 @@
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { Application } from './application.entity';
-import { EntityRepository, Repository, UpdateResult } from 'typeorm';
-import { NotFoundException } from '@nestjs/common';
+import { EntityRepository, Repository } from 'typeorm';
+import {
+  NotFoundException,
+  ConflictException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 
 @EntityRepository(Application)
 export class ApplicationRepository extends Repository<Application> {
@@ -30,8 +34,16 @@ export class ApplicationRepository extends Repository<Application> {
     application.position = position;
     application.job_post_url = job_post_url;
 
-    await application.save();
-    return application;
+    try {
+      await application.save();
+      return application;
+    } catch (error) {
+      if (error.code === '23505') {
+        throw new ConflictException('Job post url already exists');
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
   }
 
   async updateApplication(

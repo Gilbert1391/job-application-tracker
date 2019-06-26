@@ -1,15 +1,30 @@
-import { IsNotEmpty, MinLength, MaxLength } from 'class-validator';
+import {
+  IsNotEmpty,
+  MinLength,
+  MaxLength,
+  IsFQDN,
+  IsString,
+} from 'class-validator';
+import {} from 'util';
 
 export class CreateApplicationDto {
   @IsNotEmpty()
+  @IsString()
   @MaxLength(35)
+  @MinLength(3)
   company: string;
 
   @IsNotEmpty()
+  @IsString()
   @MaxLength(35)
+  @MinLength(5)
   position: string;
 
   @IsNotEmpty()
+  @IsString()
+  @MaxLength(300)
+  @MinLength(10)
+  @IsFQDN()
   job_post_url: string;
 
   issue_date: Date;

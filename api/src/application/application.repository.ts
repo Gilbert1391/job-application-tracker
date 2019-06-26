@@ -6,7 +6,7 @@ import {
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { Notes } from './notes.entity';
+import { Notes } from './notes/notes.entity';
 
 @EntityRepository(Application)
 export class ApplicationRepository extends Repository<Application> {

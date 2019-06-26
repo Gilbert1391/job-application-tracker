@@ -1,4 +1,4 @@
-import { Application } from './application.entity';
+import { Application } from '../application.entity';
 import {
   BaseEntity,
   PrimaryGeneratedColumn,

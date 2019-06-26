@@ -7,7 +7,7 @@ import {
   Unique,
   OneToMany,
 } from 'typeorm';
-import { Notes } from './notes.entity';
+import { Notes } from './notes/notes.entity';
 
 @Entity()
 @Unique(['job_post_url'])

@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  BaseEntity,
+  CreateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Application extends BaseEntity {
@@ -10,4 +16,7 @@ export class Application extends BaseEntity {
 
   @Column()
   job_post_url: string;
+
+  @CreateDateColumn()
+  issue_date: Date;
 }

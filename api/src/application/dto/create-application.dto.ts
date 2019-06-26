@@ -6,4 +6,6 @@ export class CreateApplicationDto {
 
   @IsNotEmpty()
   job_post_url: string;
+
+  issue_date: Date;
 }

@@ -28,7 +28,7 @@ export class ApplicationService {
   async updateApplication(
     id: number,
     createApplicationDto: CreateApplicationDto,
-  ): Promise<Application> {
+  ): Promise<void> {
     return this.applicationRepository.updateApplication(
       id,
       createApplicationDto,

@@ -1,12 +1,14 @@
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { Application } from './application.entity';
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, Repository, UpdateResult } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
 
 @EntityRepository(Application)
 export class ApplicationRepository extends Repository<Application> {
   async getApplications(): Promise<Application[]> {
     const query = this.createQueryBuilder('application');
+    query.orderBy('issue_date');
+
     const applications = await query.getMany();
     return applications;
   }
@@ -22,9 +24,10 @@ export class ApplicationRepository extends Repository<Application> {
   async createApplication(
     createApplicationDto: CreateApplicationDto,
   ): Promise<Application> {
-    const { company, job_post_url } = createApplicationDto;
+    const { company, position, job_post_url } = createApplicationDto;
     const application = new Application();
     application.company = company;
+    application.position = position;
     application.job_post_url = job_post_url;
 
     await application.save();
@@ -34,15 +37,9 @@ export class ApplicationRepository extends Repository<Application> {
   async updateApplication(
     id: number,
     createApplicationDto: CreateApplicationDto,
-  ): Promise<Application> {
+  ): Promise<void> {
     const application = await this.getApplicationById(id);
-    const { company, job_post_url } = createApplicationDto;
-
-    application.company = company;
-    application.job_post_url = job_post_url;
-
-    application.save();
-    return application;
+    await this.update(application.id, createApplicationDto);
   }
 
   async deleteApplication(id: number): Promise<void> {

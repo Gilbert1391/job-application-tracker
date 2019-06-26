@@ -10,6 +10,7 @@ import {
   ParseIntPipe,
   Put,
   Delete,
+  HttpCode,
 } from '@nestjs/common';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { Application } from './application.entity';
@@ -39,16 +40,18 @@ export class ApplicationController {
   }
 
   @Put('/:id')
+  @HttpCode(204)
   @UsePipes(ValidationPipe)
   updateApplication(
     @Param('id', ParseIntPipe) id: number,
     @Body() createApplicationDto: CreateApplicationDto,
-  ): Promise<Application> {
+  ): Promise<void> {
     return this.applicationService.updateApplication(id, createApplicationDto);
   }
 
   @Delete('/:id')
-  deleteApplication(@Param('id', ParseIntPipe) id: number) {
+  @HttpCode(204)
+  deleteApplication(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.applicationService.deleteApplication(id);
   }
 }

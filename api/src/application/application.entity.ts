@@ -15,6 +15,9 @@ export class Application extends BaseEntity {
   company: string;
 
   @Column()
+  position: string;
+
+  @Column()
   job_post_url: string;
 
   @CreateDateColumn()

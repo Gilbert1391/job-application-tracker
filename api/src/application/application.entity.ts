@@ -5,7 +5,9 @@ import {
   BaseEntity,
   CreateDateColumn,
   Unique,
+  OneToMany,
 } from 'typeorm';
+import { Notes } from './notes.entity';
 
 @Entity()
 @Unique(['job_post_url'])
@@ -21,6 +23,9 @@ export class Application extends BaseEntity {
 
   @Column()
   job_post_url: string;
+
+  @OneToMany(type => Notes, notes => notes.application)
+  notes: Notes[];
 
   @CreateDateColumn()
   issue_date: Date;

@@ -6,12 +6,14 @@ import {
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { Notes } from './notes.entity';
 
 @EntityRepository(Application)
 export class ApplicationRepository extends Repository<Application> {
   async getApplications(): Promise<Application[]> {
-    const query = this.createQueryBuilder('application');
-    query.orderBy('issue_date');
+    const query = this.createQueryBuilder('application')
+      .leftJoinAndSelect('application.notes', 'notes')
+      .orderBy('issue_date');
 
     const applications = await query.getMany();
     return applications;
@@ -29,10 +31,17 @@ export class ApplicationRepository extends Repository<Application> {
     createApplicationDto: CreateApplicationDto,
   ): Promise<Application> {
     const { company, position, job_post_url } = createApplicationDto;
+
+    const notes = new Notes();
+    notes.description = `${company} description`;
+    await notes.save();
+
     const application = new Application();
+
     application.company = company;
     application.position = position;
     application.job_post_url = job_post_url;
+    application.notes = [notes];
 
     try {
       await application.save();

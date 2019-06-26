@@ -9,7 +9,6 @@ import {} from 'util';
 
 export class CreateApplicationDto {
   @IsNotEmpty()
-  @IsString()
   @MaxLength(35)
   @MinLength(3)
   company: string;

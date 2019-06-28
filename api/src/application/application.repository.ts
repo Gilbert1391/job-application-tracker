@@ -1,12 +1,11 @@
 import { CreateApplicationDto } from './dto/create-application.dto';
-import { Application } from './application.entity';
 import { EntityRepository, Repository } from 'typeorm';
 import {
   NotFoundException,
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { Notes } from './notes.entity';
+import { Application } from './application.entity';
 
 @EntityRepository(Application)
 export class ApplicationRepository extends Repository<Application> {
@@ -32,16 +31,10 @@ export class ApplicationRepository extends Repository<Application> {
   ): Promise<Application> {
     const { company, position, job_post_url } = createApplicationDto;
 
-    const notes = new Notes();
-    notes.description = `${company} description`;
-    await notes.save();
-
     const application = new Application();
-
     application.company = company;
     application.position = position;
     application.job_post_url = job_post_url;
-    application.notes = [notes];
 
     try {
       await application.save();

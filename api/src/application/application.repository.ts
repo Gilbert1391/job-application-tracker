@@ -11,7 +11,7 @@ import { Application } from './application.entity';
 export class ApplicationRepository extends Repository<Application> {
   async getApplications(): Promise<Application[]> {
     const query = this.createQueryBuilder('application')
-      // .leftJoinAndSelect('application.notes', 'notes')
+      .leftJoinAndSelect('application.notes', 'notes')
       .orderBy('issue_date');
 
     const applications = await query.getMany();

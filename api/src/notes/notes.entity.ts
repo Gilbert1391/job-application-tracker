@@ -1,4 +1,4 @@
-import { Application } from '../application.entity';
+import { Application } from './../application/application.entity';
 import {
   BaseEntity,
   PrimaryGeneratedColumn,
@@ -19,6 +19,11 @@ export class Notes extends BaseEntity {
   @CreateDateColumn()
   note_issue_date: Date;
 
-  @ManyToOne(type => Application, application => application.notes)
+  @ManyToOne(type => Application, application => application.notes, {
+    eager: false,
+  })
   application: Application;
+
+  @Column()
+  applicationId: number;
 }

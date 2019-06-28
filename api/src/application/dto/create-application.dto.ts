@@ -5,7 +5,6 @@ import {
   IsFQDN,
   IsString,
 } from 'class-validator';
-import { CreateNoteDto } from './../notes/create-note.dto';
 
 export class CreateApplicationDto {
   @IsNotEmpty()
@@ -25,8 +24,6 @@ export class CreateApplicationDto {
   @MinLength(10)
   @IsFQDN()
   job_post_url: string;
-
-  note: CreateNoteDto[];
 
   issue_date: Date;
 }

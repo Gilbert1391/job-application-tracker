@@ -1,5 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
-
+import { Application } from './../../application/application.entity';
 export class CreateNoteDto {
   description: string;
 

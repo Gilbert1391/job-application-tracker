@@ -1,4 +1,3 @@
-import { Application } from './../../application/application.entity';
 import { IsNotEmpty, MinLength, MaxLength } from 'class-validator';
 export class CreateNoteDto {
   @IsNotEmpty()
@@ -6,6 +5,7 @@ export class CreateNoteDto {
   @MinLength(5)
   description: string;
 
+  @IsNotEmpty()
   application_id: number;
 
   issue_date: Date;

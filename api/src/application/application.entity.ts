@@ -1,4 +1,5 @@
-import { Notes } from './../notes/notes.entity';
+import { ApplicationStatus } from './application-status-enum';
+import { Notes } from '../notes/note.entity';
 import {
   Entity,
   Column,
@@ -24,7 +25,12 @@ export class Application extends BaseEntity {
   @Column()
   job_post_url: string;
 
-  @OneToMany(type => Notes, notes => notes.application, { eager: true })
+  @Column()
+  status: ApplicationStatus;
+
+  @OneToMany(type => Notes, note => note.application, {
+    eager: true,
+  })
   notes: Notes[];
 
   @CreateDateColumn()

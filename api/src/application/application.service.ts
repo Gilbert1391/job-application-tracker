@@ -1,3 +1,4 @@
+import { ApplicationStatus } from './application-status-enum';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ApplicationRepository } from './application.repository';
@@ -28,10 +29,12 @@ export class ApplicationService {
   async updateApplication(
     id: number,
     createApplicationDto: CreateApplicationDto,
+    status: ApplicationStatus,
   ): Promise<void> {
     return this.applicationRepository.updateApplication(
       id,
       createApplicationDto,
+      status,
     );
   }
 

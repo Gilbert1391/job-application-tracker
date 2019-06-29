@@ -1,6 +1,6 @@
 import { Application } from './../application/application.entity';
 import { Repository, EntityRepository, getRepository } from 'typeorm';
-import { Notes } from './notes.entity';
+import { Notes } from './note.entity';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { NotFoundException } from '@nestjs/common';
 

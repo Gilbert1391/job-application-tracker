@@ -1,3 +1,5 @@
+import { ApplicationStatus } from './application-status-enum';
+import { ApplicationStatusValidationPipe } from './pipes/application-status-validation.pipe';
 import { ApplicationService } from './application.service';
 import {
   Controller,
@@ -44,9 +46,14 @@ export class ApplicationController {
   @UsePipes(ValidationPipe)
   updateApplication(
     @Param('id', ParseIntPipe) id: number,
+    @Body('status', ApplicationStatusValidationPipe) status: ApplicationStatus,
     @Body() createApplicationDto: CreateApplicationDto,
   ): Promise<void> {
-    return this.applicationService.updateApplication(id, createApplicationDto);
+    return this.applicationService.updateApplication(
+      id,
+      createApplicationDto,
+      status,
+    );
   }
 
   @Delete('/:id')

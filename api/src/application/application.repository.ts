@@ -1,3 +1,4 @@
+import { ApplicationStatus } from './application-status-enum';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { EntityRepository, Repository } from 'typeorm';
 import {
@@ -20,9 +21,11 @@ export class ApplicationRepository extends Repository<Application> {
 
   async getApplicationById(id: number): Promise<Application> {
     const application = await this.findOne(id);
+
     if (!application) {
       throw new NotFoundException(`Application with ID "${id}" not found`);
     }
+
     return application;
   }
 
@@ -35,6 +38,7 @@ export class ApplicationRepository extends Repository<Application> {
     application.company = company;
     application.position = position;
     application.job_post_url = job_post_url;
+    application.status = ApplicationStatus.PENDING;
 
     try {
       await application.save();
@@ -51,9 +55,17 @@ export class ApplicationRepository extends Repository<Application> {
   async updateApplication(
     id: number,
     createApplicationDto: CreateApplicationDto,
+    status: ApplicationStatus,
   ): Promise<void> {
     const application = await this.getApplicationById(id);
-    await this.update(application.id, createApplicationDto);
+    const { company, position, job_post_url } = createApplicationDto;
+
+    await this.update(application.id, {
+      company,
+      position,
+      job_post_url,
+      status,
+    });
   }
 
   async deleteApplication(id: number): Promise<void> {

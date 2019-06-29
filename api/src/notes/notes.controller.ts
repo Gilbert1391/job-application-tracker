@@ -7,7 +7,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { Notes } from './notes.entity';
+import { Notes } from './note.entity';
 
 @Controller('notes')
 export class NotesController {

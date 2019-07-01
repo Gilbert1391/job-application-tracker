@@ -13,7 +13,7 @@ export class ApplicationRepository extends Repository<Application> {
   async getApplications(): Promise<Application[]> {
     const query = this.createQueryBuilder('application')
       .leftJoinAndSelect('application.notes', 'notes')
-      .orderBy('issue_date');
+      .orderBy('application.issued_at');
 
     const applications = await query.getMany();
     return applications;

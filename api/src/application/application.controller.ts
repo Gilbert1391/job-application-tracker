@@ -13,11 +13,14 @@ import {
   Put,
   Delete,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { Application } from './application.entity';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('applications')
+@UseGuards(AuthGuard())
 export class ApplicationController {
   constructor(private applicationService: ApplicationService) {}
 
@@ -43,11 +46,10 @@ export class ApplicationController {
 
   @Put('/:id')
   @HttpCode(204)
-  @UsePipes(ValidationPipe)
   updateApplication(
     @Param('id', ParseIntPipe) id: number,
     @Body('status', ApplicationStatusValidationPipe) status: ApplicationStatus,
-    @Body() createApplicationDto: CreateApplicationDto,
+    @Body(ValidationPipe) createApplicationDto: CreateApplicationDto,
   ): Promise<void> {
     return this.applicationService.updateApplication(
       id,

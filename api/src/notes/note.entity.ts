@@ -26,5 +26,5 @@ export class Notes extends BaseEntity {
   applicationId: number;
 
   @CreateDateColumn()
-  note_issue_date: Date;
+  issued_at: Date;
 }

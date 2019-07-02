@@ -20,6 +20,7 @@ import { CreateApplicationDto } from './dto/create-application.dto';
 import { Application } from './application.entity';
 import { User } from './../auth/user.entity';
 import { GetUser } from '../auth/decorators/user.decorator';
+
 @Controller('applications')
 @UseGuards(AuthGuard())
 export class ApplicationController {

@@ -1,26 +1,23 @@
-import { ApplicationStatus } from './application-status-enum';
-import { CreateApplicationDto } from './dto/create-application.dto';
 import { EntityRepository, Repository } from 'typeorm';
 import {
   NotFoundException,
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { ApplicationStatus } from './application-status-enum';
+import { CreateApplicationDto } from './dto/create-application.dto';
 import { Application } from './application.entity';
+import { User } from './../auth/user.entity';
 
 @EntityRepository(Application)
 export class ApplicationRepository extends Repository<Application> {
-  async getApplications(): Promise<Application[]> {
-    const query = this.createQueryBuilder('application')
-      .leftJoinAndSelect('application.notes', 'notes')
-      .orderBy('application.issued_at');
-
-    const applications = await query.getMany();
+  async getApplications(user: User): Promise<Application[]> {
+    const applications = await this.find({ where: { userId: user.id } });
     return applications;
   }
 
-  async getApplicationById(id: number): Promise<Application> {
-    const application = await this.findOne(id);
+  async getApplicationById(id: number, user: User): Promise<Application> {
+    const application = await this.findOne({ where: { id, userId: user.id } });
 
     if (!application) {
       throw new NotFoundException(`Application with ID "${id}" not found`);
@@ -31,6 +28,7 @@ export class ApplicationRepository extends Repository<Application> {
 
   async createApplication(
     createApplicationDto: CreateApplicationDto,
+    user: User,
   ): Promise<Application> {
     const { company, position, job_post_url } = createApplicationDto;
 
@@ -39,9 +37,11 @@ export class ApplicationRepository extends Repository<Application> {
     application.position = position;
     application.job_post_url = job_post_url;
     application.status = ApplicationStatus.PENDING;
+    application.user = user;
 
     try {
       await application.save();
+      delete application.user;
       return application;
     } catch (error) {
       if (error.code === '23505') {
@@ -56,8 +56,9 @@ export class ApplicationRepository extends Repository<Application> {
     id: number,
     createApplicationDto: CreateApplicationDto,
     status: ApplicationStatus,
+    user: User,
   ): Promise<void> {
-    const application = await this.getApplicationById(id);
+    const application = await this.getApplicationById(id, user);
     const { company, position, job_post_url } = createApplicationDto;
 
     await this.update(application.id, {
@@ -68,8 +69,8 @@ export class ApplicationRepository extends Repository<Application> {
     });
   }
 
-  async deleteApplication(id: number): Promise<void> {
-    const result = await this.delete(id);
+  async deleteApplication(id: number, user: User): Promise<void> {
+    const result = await this.delete({ id, userId: user.id });
 
     if (result.affected === 0) {
       throw new NotFoundException(`Application with ID "${id}" not found`);

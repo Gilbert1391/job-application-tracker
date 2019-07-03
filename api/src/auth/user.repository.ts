@@ -10,7 +10,9 @@ import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
+  async signUp(
+    authCredentialsDto: AuthCredentialsDto,
+  ): Promise<{ username: string }> {
     const { username, password } = authCredentialsDto;
 
     const salt = await bcrypt.genSalt();
@@ -22,6 +24,7 @@ export class UserRepository extends Repository<User> {
 
     try {
       await user.save();
+      return { username: user.username };
     } catch (error) {
       if (error.code === '23505') {
         throw new ConflictException('Username already exists');

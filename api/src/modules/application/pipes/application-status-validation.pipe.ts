@@ -1,4 +1,4 @@
-import { ApplicationStatus } from './../application-status-enum';
+import { ApplicationStatus } from '../application-status-enum';
 import { Injectable, PipeTransform, BadRequestException } from '@nestjs/common';
 @Injectable()
 export class ApplicationStatusValidationPipe implements PipeTransform {

@@ -18,7 +18,7 @@ import { ApplicationStatusValidationPipe } from './pipes/application-status-vali
 import { ApplicationService } from './application.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { Application } from './application.entity';
-import { User } from './../auth/user.entity';
+import { User } from '../auth/user.entity';
 import { GetUser } from '../auth/decorators/user.decorator';
 
 @Controller('applications')

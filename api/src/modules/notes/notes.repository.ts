@@ -1,8 +1,8 @@
-import { Application } from './../application/application.entity';
+import { NotFoundException } from '@nestjs/common';
 import { Repository, EntityRepository, getRepository } from 'typeorm';
+import { Application } from '../application/application.entity';
 import { Notes } from './note.entity';
 import { CreateNoteDto } from './dto/create-note.dto';
-import { NotFoundException } from '@nestjs/common';
 
 @EntityRepository(Notes)
 export class NotesRepository extends Repository<Notes> {

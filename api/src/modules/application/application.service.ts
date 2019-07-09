@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ApplicationRepository } from './application.repository';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { Application } from './application.entity';
-import { User } from './../auth/user.entity';
+import { User } from '../auth/user.entity';
 
 @Injectable()
 export class ApplicationService {

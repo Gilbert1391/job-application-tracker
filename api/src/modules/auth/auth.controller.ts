@@ -8,7 +8,6 @@ import {
   HttpCode,
 } from '@nestjs/common';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
-import { sendEmail } from './utils/mail.utils';
 
 @Controller('auth')
 export class AuthController {

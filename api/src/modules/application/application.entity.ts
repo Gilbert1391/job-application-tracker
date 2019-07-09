@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import { ApplicationStatus } from './application-status-enum';
 import { Notes } from '../notes/note.entity';
-import { User } from './../auth/user.entity';
+import { User } from '../auth/user.entity';
 
 @Entity()
 @Unique(['job_post_url'])

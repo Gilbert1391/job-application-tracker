@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApplicationModule } from './application/application.module';
 import { NotesModule } from './notes/notes.module';
 import { AuthModule } from './auth/auth.module';
-import { typeOrmConfig } from './typeorm.config';
+import { typeOrmConfig } from '../config/typeorm.config';
 
 @Module({
   imports: [

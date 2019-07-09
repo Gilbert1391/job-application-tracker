@@ -6,7 +6,7 @@ import {
   Unique,
   OneToMany,
 } from 'typeorm';
-import { Application } from './../application/application.entity';
+import { Application } from '../application/application.entity';
 
 @Entity()
 @Unique(['username'])

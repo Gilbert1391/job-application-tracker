@@ -7,7 +7,7 @@ import {
 import { ApplicationStatus } from './application-status-enum';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { Application } from './application.entity';
-import { User } from './../auth/user.entity';
+import { User } from '../auth/user.entity';
 
 @EntityRepository(Application)
 export class ApplicationRepository extends Repository<Application> {

@@ -1,10 +1,10 @@
 import { EntityRepository, Repository } from 'typeorm';
-import * as bcrypt from 'bcrypt';
 import {
   ConflictException,
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { User } from './user.entity';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 
@@ -20,7 +20,7 @@ export class UserRepository extends Repository<User> {
     const user = new User();
     user.username = username;
     user.password = await bcrypt.hash(password, salt);
-    user.salt = salt;
+    user.is_verified = false;
 
     try {
       await user.save();

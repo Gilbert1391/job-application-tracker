@@ -5,6 +5,7 @@ import {
   Column,
   Unique,
   OneToMany,
+  CreateDateColumn,
 } from 'typeorm';
 import { Application } from '../application/application.entity';
 
@@ -21,7 +22,13 @@ export class User extends BaseEntity {
   password: string;
 
   @Column()
-  salt: string;
+  is_verified: boolean;
+
+  @Column()
+  verification_token: string;
+
+  @CreateDateColumn()
+  registration_date: Date;
 
   @OneToMany(type => Application, application => application.user, {
     eager: true,

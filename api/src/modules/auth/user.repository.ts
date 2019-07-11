@@ -3,16 +3,17 @@ import {
   ConflictException,
   InternalServerErrorException,
   UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import * as cryptoRandomString from 'crypto-random-string';
 import { User } from './user.entity';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
+import { SignUpPayload } from './interfaces/sign-up.payload.interface';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-  async signUp(
-    authCredentialsDto: AuthCredentialsDto,
-  ): Promise<{ username: string }> {
+  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<SignUpPayload> {
     const { username, password } = authCredentialsDto;
 
     const salt = await bcrypt.genSalt();
@@ -21,10 +22,19 @@ export class UserRepository extends Repository<User> {
     user.username = username;
     user.password = await bcrypt.hash(password, salt);
     user.is_verified = false;
+    user.verification_key = cryptoRandomString({
+      length: 10,
+      type: 'url-safe',
+    });
+
+    const payload: SignUpPayload = {
+      username: user.username,
+      verificationKey: user.verification_key,
+    };
 
     try {
       await user.save();
-      return { username: user.username };
+      return payload;
     } catch (error) {
       if (error.code === '23505') {
         throw new ConflictException('Username already exists');
@@ -48,6 +58,10 @@ export class UserRepository extends Repository<User> {
 
     if (!match) {
       throw new UnauthorizedException('Invalid credentials');
+    }
+
+    if (!user.is_verified) {
+      throw new ForbiddenException('Please verify your account to sign in');
     }
 
     return { username: user.username };

@@ -26,6 +26,7 @@ export class UserRepository extends Repository<User> {
       length: 10,
       type: 'url-safe',
     });
+    user.verification_key_date = new Date();
 
     const payload: SignUpPayload = {
       username: user.username,

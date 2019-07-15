@@ -1,9 +1,15 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
-import { AuthCredentialsDto } from './dto/auth-credentials.dto';
+import * as moment from 'moment';
+import * as cryptoRandomString from 'crypto-random-string';
 import { UserRepository } from './user.repository';
 import { User } from './user.entity';
+import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { SignUpPayload } from './interfaces/sign-up.payload.interface';
 import { verifyAccount } from './utils/mail.utils';
@@ -41,13 +47,47 @@ export class AuthService {
       where: { verification_key: key },
     });
 
-    if (!user || user.is_verified) {
+    if (!user) {
       throw new BadRequestException(
         'Either the provided activation key is invalid or this account has already been activated',
       );
     }
+
+    if (this.verificationKeyExpired(user)) {
+      throw new NotFoundException('Your activation link has expired');
+    }
+
     user.is_verified = true;
-    user.verification_key = 'null';
+    user.verification_key = null;
+    await user.save();
+  }
+
+  // Expiration should be 24 hours
+  verificationKeyExpired(user: User): boolean {
+    const originalTime = moment(user.verification_key_date);
+    const newTime = moment();
+    const timeDiff = newTime.diff(originalTime, 'minutes');
+
+    return timeDiff > 1 ? true : false;
+  }
+
+  async createActivationLink(key: string): Promise<void> {
+    const user = await this.userRepository.findOne({
+      where: { verification_key: key },
+    });
+
+    user.verification_key = cryptoRandomString({
+      length: 10,
+      type: 'url-safe',
+    });
+    user.verification_key_date = new Date();
+
+    const payload: SignUpPayload = {
+      username: user.username,
+      verificationKey: user.verification_key,
+    };
+    verifyAccount(payload);
+
     await user.save();
   }
 }

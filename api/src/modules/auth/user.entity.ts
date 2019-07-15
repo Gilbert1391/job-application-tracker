@@ -24,8 +24,11 @@ export class User extends BaseEntity {
   @Column()
   is_verified: boolean;
 
-  @Column()
+  @Column({ nullable: true })
   verification_key: string;
+
+  @Column()
+  verification_key_date: Date;
 
   @CreateDateColumn()
   registration_date: Date;

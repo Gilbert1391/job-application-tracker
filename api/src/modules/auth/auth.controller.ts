@@ -35,4 +35,10 @@ export class AuthController {
   activateUser(@Param('key') key: string): Promise<void> {
     return this.authService.activateUser(key);
   }
+
+  @Post('/activation-link/:key')
+  @HttpCode(204)
+  createActivationLink(@Param('key') key: string): Promise<void> {
+    return this.authService.createActivationLink(key);
+  }
 }

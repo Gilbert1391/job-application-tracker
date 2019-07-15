@@ -36,9 +36,9 @@ export class AuthController {
     return this.authService.activateUser(key);
   }
 
-  @Post('/activation-link/:key')
+  @Post('/activation-key/:key')
   @HttpCode(204)
-  createActivationLink(@Param('key') key: string): Promise<void> {
-    return this.authService.createActivationLink(key);
+  generateActivationLink(@Param('key') key: string): Promise<void> {
+    return this.authService.generateActivationLink(key);
   }
 }

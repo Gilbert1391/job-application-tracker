@@ -17,7 +17,7 @@ export const verifyAccount = async (payload: SignUpPayload): Promise<void> => {
   const mailOptions = {
     from: '"Job application tracker team" <jat-noreply@accountprotection.com>',
     to: username,
-    subject: 'Re-verify your account',
+    subject: 'verify your account',
     html: `
     <div style="font-size:14px;">
       <p>Thanks for using job-application-tracker! Please confirm your email address by clicking on the link below.</p>

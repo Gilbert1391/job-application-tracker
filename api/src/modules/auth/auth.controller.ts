@@ -6,8 +6,6 @@ import {
   UsePipes,
   ValidationPipe,
   HttpCode,
-  Get,
-  Param,
 } from '@nestjs/common';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 
@@ -28,17 +26,5 @@ export class AuthController {
     @Body() authCredentialsDto: AuthCredentialsDto,
   ): Promise<{ accessToken: string }> {
     return this.authService.signIn(authCredentialsDto);
-  }
-
-  @Get('/activate/:key')
-  @HttpCode(204)
-  activateUser(@Param('key') key: string): Promise<void> {
-    return this.authService.activateUser(key);
-  }
-
-  @Post('/activation-key/:key')
-  @HttpCode(204)
-  generateActivationLink(@Param('key') key: string): Promise<void> {
-    return this.authService.generateActivationLink(key);
   }
 }

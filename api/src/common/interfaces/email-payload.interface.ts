@@ -1,4 +1,4 @@
-export interface SignUpPayload {
+export interface EmailPayload {
   username: string;
   verificationKey: string;
 }

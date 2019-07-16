@@ -1,8 +1,9 @@
 import * as nodemailer from 'nodemailer';
-import { smtpConfig } from '../../../config/smtp.config';
-import { SignUpPayload } from '../interfaces/sign-up.payload.interface';
+import { smtpConfig } from './../../config/smtp.config';
+import { EmailPayload } from '../interfaces/email-payload.interface';
+import { BadGatewayException } from '@nestjs/common';
 
-export const verifyAccount = async (payload: SignUpPayload): Promise<void> => {
+export const sendEmail = async (payload: EmailPayload): Promise<void> => {
   const { username, verificationKey } = payload;
   const transporter = nodemailer.createTransport({
     host: smtpConfig.host,
@@ -30,14 +31,11 @@ export const verifyAccount = async (payload: SignUpPayload): Promise<void> => {
     `,
   };
 
-  // send mail with defined transport object
-  await transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-    }
-    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-    console.log('Message sent: %s', info.messageId);
-
-    transporter.close();
-  });
+  try {
+    let info = await transporter.sendMail(mailOptions);
+    console.log(info.messageId);
+  } catch (error) {
+    console.log(error);
+    throw new BadGatewayException('Mail delivery failed');
+  }
 };

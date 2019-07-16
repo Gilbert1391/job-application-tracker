@@ -9,16 +9,15 @@ import * as bcrypt from 'bcrypt';
 import * as cryptoRandomString from 'crypto-random-string';
 import { User } from './user.entity';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
-import { SignUpPayload } from './interfaces/sign-up.payload.interface';
+import { EmailPayload } from './../../../dist/common/interfaces/email-payload.interface.d';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<SignUpPayload> {
+  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<EmailPayload> {
     const { username, password } = authCredentialsDto;
-
     const salt = await bcrypt.genSalt();
-
     const user = new User();
+
     user.username = username;
     user.password = await bcrypt.hash(password, salt);
     user.is_verified = false;
@@ -27,7 +26,7 @@ export class UserRepository extends Repository<User> {
       type: 'url-safe',
     });
 
-    const payload: SignUpPayload = {
+    const payload: EmailPayload = {
       username: user.username,
       verificationKey: user.verification_key,
     };

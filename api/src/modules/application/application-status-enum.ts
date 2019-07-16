@@ -3,5 +3,5 @@ export enum ApplicationStatus {
   REJECTED = 'REJECTED',
   INTERVIEW = 'INTERVIEW',
   ASSIGNMENT = 'ASSIGNMENT',
-  SUCCEEDED = 'SUCCEEDED',
+  OFFER = 'OFFER',
 }

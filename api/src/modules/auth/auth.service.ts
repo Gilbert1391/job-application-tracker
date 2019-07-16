@@ -63,12 +63,11 @@ export class AuthService {
     await user.save();
   }
 
-  // Expiration should be 24 hours
   verificationKeyExpired(user: User): boolean {
     const originalTime = moment(user.verification_key_date);
     const newTime = moment();
-    const timeDiff = newTime.diff(originalTime, 'minutes');
-    return timeDiff > 3 ? true : false;
+    const timeDiff = newTime.diff(originalTime, 'hours');
+    return timeDiff > 24 ? true : false;
   }
 
   async generateActivationLink(key: string): Promise<void> {
@@ -92,7 +91,6 @@ export class AuthService {
       length: 10,
       type: 'url-safe',
     });
-    user.verification_key_date = new Date();
 
     const payload: SignUpPayload = {
       username: user.username,

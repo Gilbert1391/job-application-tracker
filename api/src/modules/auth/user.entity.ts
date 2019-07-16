@@ -6,6 +6,7 @@ import {
   Unique,
   OneToMany,
   CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Application } from '../application/application.entity';
 
@@ -27,10 +28,10 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   verification_key: string;
 
-  @Column()
+  @UpdateDateColumn({ type: 'timestamp with time zone' })
   verification_key_date: Date;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamp with time zone' })
   registration_date: Date;
 
   @OneToMany(type => Application, application => application.user, {

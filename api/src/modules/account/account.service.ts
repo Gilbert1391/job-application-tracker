@@ -9,7 +9,7 @@ import * as moment from 'moment';
 import * as cryptoRandomString from 'crypto-random-string';
 import { User } from './../auth/user.entity';
 import { UserRepository } from './../auth/user.repository';
-import { EmailPayload } from './../../common/interfaces/email-payload.interface';
+import { AccountActivationPayload } from '../../common/interfaces/account-activation-payload.interface';
 import { sendEmail } from './../../common/utils/mailer.util';
 
 @Injectable()
@@ -20,9 +20,7 @@ export class AccountService {
   ) {}
 
   async activateAccount(key: string): Promise<void> {
-    const user = await this.userRepository.findOne({
-      where: { verification_key: key },
-    });
+    const user = await this.userRepository.getUserByKey(key);
 
     if (!user) {
       throw new BadRequestException(
@@ -46,10 +44,8 @@ export class AccountService {
     return timeDiff > 2 ? true : false;
   }
 
-  async generateActivationLink(key: string): Promise<void> {
-    const user = await this.userRepository.findOne({
-      where: { verification_key: key },
-    });
+  async sendActivationKey(key: string): Promise<void> {
+    const user = await this.userRepository.getUserByKey(key);
 
     if (!user) {
       throw new BadRequestException(
@@ -59,7 +55,7 @@ export class AccountService {
 
     if (!this.verificationKeyExpired(user)) {
       throw new ConflictException(
-        'We have already sent you an activation link, please check your email',
+        'We have already sent you an activation key, please check your email',
       );
     }
 
@@ -69,7 +65,23 @@ export class AccountService {
     });
     await user.save();
 
-    const payload: EmailPayload = {
+    const payload: AccountActivationPayload = {
+      username: user.username,
+      verificationKey: user.verification_key,
+    };
+    return sendEmail(payload);
+  }
+
+  async sendActivationLink(username: string): Promise<void> {
+    const user = await this.userRepository.getUserByUsername(username);
+
+    if (!user || !user.verification_key) {
+      throw new BadRequestException(
+        'Either the provided username is invalid or this account has already been activated',
+      );
+    }
+
+    const payload: AccountActivationPayload = {
       username: user.username,
       verificationKey: user.verification_key,
     };

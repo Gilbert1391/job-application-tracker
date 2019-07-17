@@ -1,4 +1,4 @@
-export interface EmailPayload {
+export interface AccountActivationPayload {
   username: string;
   verificationKey: string;
 }

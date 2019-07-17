@@ -1,9 +1,11 @@
 import * as nodemailer from 'nodemailer';
 import { smtpConfig } from './../../config/smtp.config';
-import { EmailPayload } from '../interfaces/email-payload.interface';
+import { AccountActivationPayload } from '../interfaces/account-activation-payload.interface';
 import { BadGatewayException } from '@nestjs/common';
 
-export const sendEmail = async (payload: EmailPayload): Promise<void> => {
+export const sendEmail = async (
+  payload: AccountActivationPayload,
+): Promise<void> => {
   const { username, verificationKey } = payload;
   const transporter = nodemailer.createTransport({
     host: smtpConfig.host,

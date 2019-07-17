@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, Param, Patch } from '@nestjs/common';
+import { Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { AccountService } from './account.service';
 
 @Controller('account')
@@ -7,13 +7,19 @@ export class AccountController {
 
   @Get('/activate/:key')
   @HttpCode(204)
-  activateUser(@Param('key') key: string): Promise<void> {
+  activateAccount(@Param('key') key: string): Promise<void> {
     return this.accountService.activateAccount(key);
   }
 
-  @Patch('/activation-link/:key')
+  @Post('/activation-key/:key')
   @HttpCode(204)
-  generateActivationLink(@Param('key') key: string): Promise<void> {
-    return this.accountService.generateActivationLink(key);
+  sendActivationKey(@Param('key') key: string): Promise<void> {
+    return this.accountService.sendActivationKey(key);
+  }
+
+  @Post('/activation-link/:username')
+  @HttpCode(204)
+  sendActivationLink(@Param('username') username: string): Promise<void> {
+    return this.accountService.sendActivationLink(username);
   }
 }

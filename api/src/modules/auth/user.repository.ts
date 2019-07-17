@@ -9,11 +9,13 @@ import * as bcrypt from 'bcrypt';
 import * as cryptoRandomString from 'crypto-random-string';
 import { User } from './user.entity';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
-import { EmailPayload } from './../../../dist/common/interfaces/email-payload.interface.d';
+import { AccountActivationPayload } from './../../common/interfaces/account-activation-payload.interface';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<EmailPayload> {
+  async signUp(
+    authCredentialsDto: AuthCredentialsDto,
+  ): Promise<AccountActivationPayload> {
     const { username, password } = authCredentialsDto;
     const salt = await bcrypt.genSalt();
     const user = new User();
@@ -26,7 +28,7 @@ export class UserRepository extends Repository<User> {
       type: 'url-safe',
     });
 
-    const payload: EmailPayload = {
+    const payload: AccountActivationPayload = {
       username: user.username,
       verificationKey: user.verification_key,
     };
@@ -64,5 +66,17 @@ export class UserRepository extends Repository<User> {
     }
 
     return { username: user.username };
+  }
+
+  async getUserByKey(key: string): Promise<User> {
+    const user = await this.findOne({
+      where: { verification_key: key },
+    });
+    return user;
+  }
+
+  async getUserByUsername(username: string): Promise<User> {
+    const user = await this.findOne({ username });
+    return user;
   }
 }

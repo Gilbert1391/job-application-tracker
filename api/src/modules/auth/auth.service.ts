@@ -6,7 +6,7 @@ import { User } from './user.entity';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { sendEmail } from './../../common/utils/mailer.util';
-import { EmailPayload } from './../../common/interfaces/email-payload.interface';
+import { AccountActivationPayload } from '../../common/interfaces/account-activation-payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +20,7 @@ export class AuthService {
     const { username, verificationKey } = await this.userRepository.signUp(
       authCredentialsDto,
     );
-    const payload: EmailPayload = { username, verificationKey };
+    const payload: AccountActivationPayload = { username, verificationKey };
     return sendEmail(payload);
   }
 
